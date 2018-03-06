@@ -1,4 +1,4 @@
-﻿Shader "Holistic/Rimlighting"
+﻿Shader "Holistic/Rimlighting&stripes"
 {
 	Properties
 	{
@@ -17,14 +17,13 @@
 		struct Input
 		{
 			float3 viewDir;
+			float3 worldPos;
 		};
 
 		void surf(Input IN, inout SurfaceOutput o)
 		{
-			half rim = 1 - (dot(normalize(IN.viewDir), o.Normal));
-
-			o.Emission = _RimColor * pow(rim,_RimPower);
-		
+			half rim = 1-saturate(dot(normalize(IN.viewDir), o.Normal));
+			o.Emission = frac(IN.worldPos.y * 5)>0.4 ? float3(1,0,0)*rim:float3(0,1,0)*rim;
 		}
 
 		ENDCG
